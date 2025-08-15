@@ -89,3 +89,59 @@ const output = arr.reduce((acc, curr) => {
     }
 }, 0);
 console.log(output);
+
+
+const users = [
+    {fname: "Farrukh", lname: "Shahzad", age: 28},
+    {fname: "Tausif", lname: "Akhter", age: 29}, 
+    {fname: "Malek", lname: "Hossain", age: 28},
+    {fname: "Khalid", lname: "Shahzad", age: 24}, 
+    {fname: "Adeel", lname: "Shahzad", age: 18},
+]; 
+ 
+// output = {28:2, 29:1, 24:1, 18:1}
+
+// function uniqueAge = Array.from(new Set(arr)); // [28,29,24,18];
+
+const uniqueAge = Array.from(new Set(users.map(user => user.age)));
+const output = uniqueAge.reduce((acc, curr) => {
+    const noOfUSerWithThatAge = users.filter(user => user.age === curr).length;
+    acc = {...acc, curr: noOfUSerWithThatAge}
+}, {});
+
+console.log(output);
+
+Array.from(new Set(users.map(user => user.age))).reduce((acc, curr) => {
+    const noOfUSerWithThatAge = users.filter(user => user.age === curr).length;
+    acc = {...acc, curr: noOfUSerWithThatAge}
+}, {});
+
+users.reduce((acc, curr) => {
+    const count = users.filter(user => user.age === curr.age).length;
+    acc = {...acc, curr.age: count};
+}, {});
+
+
+const output = users.reduce((acc, curr) => {
+    if(acc[curr.age]) {
+        acc[curr.age] = ++acc[curr.age];
+    }
+    else {
+        acc[curr.age] = 1;
+    }
+}, {});
+console.log(output); // {28:2, 29:1, 24:1. 18:1}
+
+// FirstName of all the people whose age is less than 28
+
+const output = users.reduce((acc, curr) => {
+    if(curr.age<28) acc.push(curr.fname)
+}, []);
+console.log(output);
+const output = users.filter(user => {
+    if(user.age < 28) return user.fname
+})
+console.log(output);
+
+const output = users.filter(user => user.age < 28).map(user => user.fname);
+console.log(output);
