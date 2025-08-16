@@ -1,0 +1,42 @@
+Everything in JS is an object. Down the prototype chain it is an object.
+
+JS engine automatically attches some hidden properties and functions which we can access on it. These come via prototype.
+
+Whenever we create an object, JS engine creates an object with the hidden properties and fucnitons and attaches it to our object and that is how we get access to these properties and fucntions.
+We can access that hidden object by:
+arr.__proto__ it is the same as Array.prototype  <-- This is the object that JS engine attaches to our object and we can use the properties and fucntion of this this object directly from our object using the dot operator
+    Each and every object in JS has a prototype and even arr.__proto_ has its own prototype.
+    arr.__proto__.__proto__  <-- it is also an Object {........}
+    arr.__proto__.__proto__.__proto__ <-- it is null
+
+Object/__proto__ <--
+functionName.__proto__ <--
+
+
+The prototype of Object.prototype or Object.__proto__ (which is Object.prototype.__proto_ or Object.__proto_.__proto_) is null.
+
+
+functionName.__proto__ is the same as Function.prototype (which is a function)
+funcitonName.__proto__.__proto__ is an Object and funcitonName.__proto__.__proto__.__proto__ is null.
+
+This is the prototyppe chain and it ends at being null.
+
+When we try to access any property, it will check in the object, if it doesn't find it there it goes to the proto and if it doesn't find it there also then it goes to the proto of the proto of that object.
+* The object inherits the properties of its proto and that is what we call as prototypal inheritance
+
+const object1 = {
+    name: "Akshay",
+    city: "Dehradun",
+    getIntro: function() {
+        console.log(this.name + "from" + this.city)
+    }
+}
+
+let object2 = {
+    name: "Aditya",
+}
+
+object2.__proto__ = object1; // we are assigning object1 to be the prototype pf the Object2
+
+Object1.getIntro(); // Akshay from Dehradun
+object2.getIntro(); // Aditya fron Dehradun
