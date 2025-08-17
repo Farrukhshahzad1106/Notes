@@ -1,0 +1,92 @@
+// 1 - Find the index of the number mentioned, if found return its index if not return -1
+
+const arr = [2,3,5,7,12,34,56];
+const numberToFind = 34;
+
+function findIndex (arr) {
+    let index = -1;
+    for(let i=0; i<arr.length; i++){
+        if(arr[i] === numberToFind) {
+            index = i;
+        }
+    }
+    return index;
+}
+
+function findIndex (arr) {
+    for(let i=0; i<arr.length; i++){
+        if(arr[i] === numberToFind) {
+            return i;
+        }
+    }
+    return -1;
+}
+console.log(findIndex(arr));
+
+
+// 2 - Write a function that return the number of engative numbers in the array
+
+const arr = [-2, -4, 34, 45, 0, -33, 23, 2];
+
+function findNumberOfNegative (arr) {
+    let count = 0;
+    for (let i = 0; i<arr.length; i++) {
+        if(arr[i] < 0) {
+            count++;
+        }
+    }
+    return count;
+}
+
+console.log(findNumberOfNegative(arr));
+
+
+// 3 - Write a funciton to return the largest number in the array
+
+const arr = [-2, -4, 34, 45, 0, -33, 23, 2];
+
+function findLargest (arr) {
+    let largest = -Infinity; // or let largest = arr[0];
+    for(let i=0; i<arr.length; i++){
+        if(arr[i] > largest) {
+            largest = arr[i];
+        }
+    }
+    return largest;
+}
+
+console.log(findLargest(arr));
+
+// 3 - Write a funciton to return the smallest number in the array
+
+const arr = [-2, -4, 34, 45, 0, -33, 23, 2];
+
+function findSmallest (arr) {
+    let smallest = arr[0]; // or let largest = -Infinity;
+    for(let i=0; i<arr.length; i++){
+        if(arr[i] < smallest) {
+            smallest = arr[i];
+        }
+    }
+    return smallest;
+}
+
+console.log(findSmallest(arr));
+
+
+
+const arr = [-2, -4, 34, 45, 0, -33, 23, 2];
+
+function findSecondLargest(arr) {
+    let largest = arr[0];
+    let secondLargest = arr[0];
+    for(let i = 0; i< arr.length; i++) {
+        if(arr[i] > largest) {
+            largest = arr[i];
+            secondLargest = largest;
+        }
+    }
+    return secondLargest;
+}
+
+console.log(findSecondLargest(arr));
