@@ -81,12 +81,165 @@ function findSecondLargest(arr) {
     let largest = arr[0];
     let secondLargest = arr[0];
     for(let i = 0; i< arr.length; i++) {
-        if(arr[i] > largest) {
-            largest = arr[i];
-            secondLargest = largest;
+        if(arr[i] > secondLargest) {
+            if(arr[i] > largest){
+                secondLargest = largest;
+                largest = arr[i];
+                continue;
+            }
+            secondLargest = arr[i];
         }
     }
     return secondLargest;
 }
 
 console.log(findSecondLargest(arr));
+
+
+function findSecondLargest(arr) {
+    if(arr.length < 2) return null; // handling the corner cases 1 and 2
+    let largest = arr[0];
+    let secondLargest = arr[0];
+    for(let i = 0; i< arr.length; i++) {
+        if(arr[i] > largest) {
+            secondLargest = largest;
+            largest = arr[i];
+            }
+        if(arr[i] > secondLargest && arr[i] !== largest) { // checking if my current element is greater than secondLargest and not equal to largest
+            secondLargest = arr[i];
+        }
+    }
+    return secondLargest;
+}
+
+console.log(findSecondLargest(arr))
+
+// Corner cases: 
+// 1 - What if the array is empty
+// 2 - what if the array has 1 element
+// 3 - what if the array has negative values
+// 4 - What if the largest element occurs twice in the array (should largest and secondLargest be the same? ) dublicates shouldn't be counted. For this scenario while checking for arr[i] > secondLArgest we can also check that it is not equal to largest
+
+WHENEVER APPROACHING ARRAY QUESTIONS:
+1 - If array is empty
+2 - If array has duplicate values
+3 - If array has negative values
+4 - If array has single element or multiple elements
+
+LOOP WIOTHIN A LOOP
+
+****
+****
+****
+****
+
+function printPattern(n) {
+    for (let i=0; i<n; i++){
+        let row = "";
+        for (let j=0; j<n; j++) {
+            row+= "*";
+        }
+        console.log(row);
+    }
+}
+printPattern(4);
+
+*
+**
+***
+****
+
+function printPattern(n) {
+    for (let i=0; i<n; i++){
+        let row = "";
+        for (let j=0; j<=i; j++) {
+            row+= "*";
+        }
+        console.log(row);
+    }
+}
+printPattern(4);
+
+1
+12
+123
+1234
+12345
+
+function printPattern(n) {
+    for (let i=1; i<=n; i++){
+        let row = "";
+        for (let j=1; j<=i; j++) {
+            row+= i; 
+        }
+        console.log(row);
+    }
+}
+printPattern(5);
+
+12345
+1234
+123
+12
+1
+function printPattern(n) {
+    for (let i=n; i>0; i--){
+        let row = "";
+        for (let j=1; j<=i; j++) {
+            row+=j; 
+        }
+        console.log(row);
+    }
+}
+printPattern(5);
+
+function printPattern(n) {
+    for (let i=0; i<n; i++){
+        let row = "";
+        for (let j=1; j<=(n-i); j++) {
+            row+=j; 
+        }
+        console.log(row);
+    }
+}
+printPattern(5);
+
+*****
+****
+***
+**
+*
+function printPattern(n) {
+    for (let i=0; i<n; i++){
+        let row = "";
+        for (let j=0; j<(n-i); j++) {
+            row+=*; 
+        }
+        console.log(row);
+    }
+}
+printPattern(5);
+
+
+
+
+    *
+   **
+  ***
+ ****
+*****
+
+function printPattern(n) {
+    for (let i=0; i<n; i++){
+        let row = "";
+        for (let j=0; j<(n-i); j++) {
+            row+= " ";
+        }
+        for(let k= (n-i); k<n; k++) {
+            row+="*";
+        }
+        console.log(row);
+    }
+}
+printPattern(5);
+
