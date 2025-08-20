@@ -232,14 +232,167 @@ printPattern(5);
 function printPattern(n) {
     for (let i=0; i<n; i++){
         let row = "";
-        for (let j=0; j<(n-i); j++) {
+        for (let j=0; j<(n-(i+1)); j++) {
             row+= " ";
         }
-        for(let k= (n-i); k<n; k++) {
+        for(let k= (n-(i+1)); k<n; k++) {
             row+="*";
+        }
+        // for (let k = 0; k < (i + 1); k++) {
+        //     row += " *";
+        // }
+        console.log(row);
+    }
+}
+printPattern(5);
+
+
+1
+10
+101
+1010
+10101
+
+function printPattern(n) {
+    for (let i=0; i<n; i++){
+        let row = "";
+        for (let j=0; j<=i; j++) {
+           row+= (j+1)%2
         }
         console.log(row);
     }
 }
 printPattern(5);
 
+1
+01
+010
+1010
+10101
+
+function printPattern(n) {
+    lrt toggle = 1;
+    for (let i=0; i<n; i++){
+        let row = "";
+        for (let j=0; j<=i; j++) {
+           row+= toggle;
+           if(toggle === 1) toggle = 0;
+           else toggle = 1;
+        }
+        console.log(row);
+    }
+}
+printPattern(5);
+
+// Count the numbe of digits of a number
+
+function countDigits(n) {
+    if (n === 0) return 1; // handling the scenario if the number is 0 and we want the count to be 1
+    // if (n < 0) n *= -1 // handling case of negative number
+    n = Math.abs(n); // handling for case of negative number
+    let count = 0;
+    while (n > 0) {
+        n = Math.floor(n / 10);
+        ++count;
+    }
+    console.log('count', count);
+    return count;
+}
+countDigits(5);
+countDigits(123);
+countDigits(32);
+countDigits(24353467532);
+countDigits(-5);
+console.log(countDigits(0));
+
+// PALINDROME (-123 & 123- are not hte same and hence is not a palindrom - this is one of the test case)
+
+function checkPalindrome2(n) {
+    if (n >= 0 && n <= 9) { // handling if the number is single digit
+        console.log("Number is singleDigit, cannot be a palindrome");
+    }
+    const originalNum = n;
+    n = Math.abs(n);
+    let revNum = ""; // can store the reverse number by concatenating in a string
+    let revNum2 = 0; // also can be stored in a number
+    while (n > 0) {
+        revNum += n % 10;
+        const rem = n % 10;
+        revNum2 = 10 * (revNum2) + rem
+        n = Math.floor(n / 10)
+    }
+    if (originalNum < 0) {
+        revNum += "-";
+    }
+    console.log(originalNum, revNum, revNum2)
+    // if (Number(originalNum) === Number(revNum)) {
+    //     console.log("Is a palindrome");
+    // }
+    if (originalNum === revNum2) {
+        console.log("Is a palindrome");
+    }
+    else {
+        console.log("Not a palindrome");
+    }
+    return revNum === originalNum; // we can simple return true or false instead of console.log()
+}
+
+checkPalindrome2(123);
+checkPalindrome2(646);
+checkPalindrome2(56765);
+checkPalindrome2(-56765);
+
+
+function checkPalindrome(n) {
+    if(n<0) return false; // If negative numbers must be reversed with sign os it wont be a palindrome
+    if(n>=0 && n<=9) return false; // If single digit is taken as not a palindrome
+    const originalNum = n;
+    let rev = 0;
+
+    while(n>0) {
+        const rem = n%10;
+        rev = (10*rev) + rem;
+        n= Math.abs(n/10);
+    }
+    return rev === originalNum;
+}
+
+
+// REVERSE AN INTEGER (SIGNED INTEGER WITHIN THE LIMIT [-2^31, (2^31)-1]);
+
+function reverseInteger(n) {
+    const min = -(2 ** 31); // Math.pow(2,31)
+    const max = (2 ** 31) - 1; // Math.pow(2,31) - 1
+
+    let revNum = n < 0 ? "-" : "";
+    n = Math.abs(n);
+    while (n > 0) {
+        const rem = n % 10;
+        revNum += rem;
+        n = Math.floor(n / 10);
+    }
+    if (Number(revNum) < min || Number(revNum) > max) return 0;
+    return (Math.floor(revNum));
+}
+
+also
+
+var reverseInteger = function(x) {
+    const xCopy = x;
+    let rev = 0;
+    x = Math.abs(x);
+    while(x>0) {
+        const rem = x%10;
+        rev = (10 * rev) + rem;
+        x = x/10;
+    }
+    let limit = Math.pow(2,31);
+    if(rev < -limit || rev > limit - 1) return 0;
+    return xCopy < 0 ? -rev : rev;
+}
+
+
+console.log(reverseInteger(654)) // 456
+console.log(reverseInteger(-654)) // -456
+console.log(reverseInteger(650)) // 56
+console.log(reverseInteger(6506735639)) // 0
