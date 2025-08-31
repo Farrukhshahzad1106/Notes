@@ -1,0 +1,27 @@
+TIME COMPLEXITY
+ - It is used to measure the effieciency of algorithm in terms of speed, as the input increases. Throough time complexity we will get to know the speed effieciency with which the algorithm will work as the input grows in size.
+
+ -> Time complexity is not equal to time taken for an algorithm to run. Time taken for an algorithm to run is dependant on the language, system and other factors as well. Time complexity gives us a measure of the speed effieciency.
+
+We use Big O notation to represent Time complexity
+ - It tells us that we will measure the time complexity in worst case scenario
+
+Linear Search [5,6,7,8,1,12,3] - 
+    Best case - first element is what we need to search. We get it in by going through the first element of the array itself
+            x(no.of iterations) = 1
+    Worst case - last element (3) or say(100) which is not even in the array is what we need to search. We get it after iterating through each element of the array
+             x(no.of iterations) = 7 (which is n- the size of the array)
+
+
+
+Binary Search -  [1,2,3,5,6,7,8]
+    Best case - We need to search 5 and we get it in the first iteration only when we go fir middle term 
+         x(no.of iterations) = 1
+    Worst case - We need to search for 100(not even in the array). So we need to do max no.of iteration
+         x(no.of iterations) = 3 (log n) which is log 7 base 2 (where 7 is the no.of elements in the array)
+
+
+Why are we looking for Worst case??
+- Because in the best case scenario all algorithms behave in the same way, it is in the worst scenario when we can get to know how it behaves.
+- To represent the worst case we usee Big O notation. This notation is just a symbol.
+- Big O notation represents the worst case Time complexity.
