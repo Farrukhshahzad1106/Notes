@@ -10,6 +10,7 @@ const {x, calculateSum, calculateMultiply, substract} = require('./calculate');
 // if we don't specify the file name, it will look for index.js file in the folder and import the exported items from there
 const data = require('./data.json'); // importing json file as a module
 const util = require("node:util"); // importing nodejs built-in module called util
+const fs = require("node:fs"); // importing nodejs built-in module called fs
 
 
 // import {x, calculateSum} from './sum.js';
