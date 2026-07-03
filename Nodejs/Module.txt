@@ -1,0 +1,27 @@
+Q - What happens when we import a module ( when we do require('..file path ..))
+
+A - Nodejs gives out code to v8 engine and our code is executed by v8 engine.
+    We cannot the variables and functions which are declared inside a function, outside of it. Modules work the same way.
+
+    When we create a module(file) and write code inside of it, everything within a module is wrapped inside a function and it cannot be accessed outside of it by default. We can access the code present inside a module in another module by exporting it but not elsewise.
+    We can access it outsidde by doing module.exports in commonjs module system or by export ...... in ES Module (mjs) system.
+    The main reason we cannot access the code inside of a module is because it is wrapped inside of a function and it's scope is within it only
+
+    So when we do require('..file path ..).
+    Nodejs creats an IIFE and wraps the entire content of the module within the function. (function() {...content of module whose path iiis given in require()}) ()
+    Nodejs will take the content of module, wrap the content in an IIFE and then handover it to v8 for execution.
+
+    Benefits if IIFE: 
+    a - It immediately invokes it
+    b - It keeps the variable and functions safely within its scope, independently from the code outside of the IIFE(imported module) in the module(the module in which i is imported) it is imported.
+
+Q - How are variables and functions private in different modules? 
+A - Because of IIFE and require
+
+
+Q - How do we get ccess to module.exports, where does it come from?
+A - When the code(content of the module) is wrapped inside the IIFE, the function is having module as the parameter and we get it from there. So when the IIFE in invoked the module object is passed as argument with exporsts ky as an empty object
+    These parameters to the IIFE is given by Nodejs. Nodjs passes as one of the parameter to the IIFE that wraps the module
+    (function (module, require) {
+        // code of the module
+    }) (module); 
