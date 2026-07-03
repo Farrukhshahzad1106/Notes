@@ -21,7 +21,25 @@ A - Because of IIFE and require
 
 Q - How do we get ccess to module.exports, where does it come from?
 A - When the code(content of the module) is wrapped inside the IIFE, the function is having module as the parameter and we get it from there. So when the IIFE in invoked the module object is passed as argument with exporsts ky as an empty object
-    These parameters to the IIFE is given by Nodejs. Nodjs passes as one of the parameter to the IIFE that wraps the module
+    These parameters to the IIFE is given by Nodejs. Nodjs passes as one of the parameter to the IIFE that wraps the module, and then it passes the code to v8 engine
+    The module.exports object is returned when we do require any file.
+
     (function (module, require) {
         // code of the module
     }) (module); 
+
+
+There are 5 steps when we do require();
+
+1 - Resolving the module
+        The file could be ./locsl path(js or ts file), node module, json file
+
+2 - Loading the Module
+        The file content is loaded according to file type
+
+3 - Wraps the module inside an IIFE (cmpile step)
+
+4 - Code evaluation
+        In this step the module.exports is returned
+
+5 - Caching (Caching is required because multiple files are required by multiple other files and doing all  the above 4 steps each time for the same time is very expensive (high resource cnsumptions happens), so when the next time this aprticular module is required it is returned from the cache itself as it is already executed previously )
