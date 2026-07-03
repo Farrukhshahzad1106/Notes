@@ -37,7 +37,10 @@ There are 5 steps when we do require();
 2 - Loading the Module
         The file content is loaded according to file type
 
-3 - Wraps the module inside an IIFE (cmpile step)
+3 - Wraps the module inside an IIFE (compile step).
+        (function (exports, require, module, _filename, -dirname) {
+            .....The script of the module content
+        })();
 
 4 - Code evaluation
         In this step the module.exports is returned
