@@ -39,7 +39,7 @@ There are 5 steps when we do require();
 
 3 - Wraps the module inside an IIFE (compile step).
         (function (exports, require, module, _filename, -dirname) {
-            .....The script of the module
+            .....The script of the module being imported
         })();
 
 4 - Code evaluation
