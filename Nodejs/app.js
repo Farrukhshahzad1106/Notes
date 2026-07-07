@@ -23,7 +23,7 @@ var a = 1;
 var b = 2;
 
 console.log(name);
-console.log(x);
+// console.log(x);
 console.log(calculateSum(a, b));
 console.log(calculateMultiply(a, b));
 console.log(substract(a, b));
