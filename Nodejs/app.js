@@ -20,7 +20,7 @@ const fs = require("node:fs"); // importing nodejs built-in module called fs
 var name = "Namaste Nodejs, learning Backend development using Nodejs";
 
 var a = 1;
-var b = 2;
+var b = 7;
 
 console.log(name);
 // console.log(x);
