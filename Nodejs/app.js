@@ -29,6 +29,7 @@ console.log(calculateSum(a, b));
 console.log(calculateMultiply(a, b));
 console.log(substract(a, b));
 console.log(calculateSum(a, c));
+console.log(calculateMultiply(a, a));
 console.log(calculateMultiply(a, c));
 console.log(substract(a, c));
 console.log(JSON.stringify(data));
