@@ -21,12 +21,16 @@ var name = "Namaste Nodejs, learning Backend development using Nodejs";
 
 var a = 1;
 var b = 7;
+const c = 5;
 
 console.log(name);
 // console.log(x);
 console.log(calculateSum(a, b));
 console.log(calculateMultiply(a, b));
 console.log(substract(a, b));
+console.log(calculateSum(a, c));
+console.log(calculateMultiply(a, c));
+console.log(substract(a, c));
 console.log(JSON.stringify(data));
 // console.log(global);
 // console.log(this); // {}, this is not equal to  global object in this scenario whereas in case of browser this is equal to window object
