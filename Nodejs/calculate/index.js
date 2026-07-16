@@ -4,5 +4,5 @@ const {substract} = require('./substract.js');
 const {calculateQuotient, calculateRemainder} = require('./divide.js');
 
 
-module.exports = {x, calculateSum, calculateMultiply, substract, calculateQuotient, calculateRemainder}; 
+module.exports = { calculateSum, calculateMultiply, substract, calculateQuotient, calculateRemainder}; 
 // exporting all the modules from this file so that we can import them in app.js file
