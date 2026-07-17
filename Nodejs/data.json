@@ -2,6 +2,6 @@
     "name": "Farrukh",
     "city": "Kolkata",
     "age": 29,
-    "professon": "Software Engineer",
+    "profession": "Software Engineer",
     "skills": ["JavaScript", "Nodejs", "Reactjs", "MongoDB", "Expressjs"]
 }

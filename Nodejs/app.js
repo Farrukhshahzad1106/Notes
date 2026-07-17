@@ -6,7 +6,7 @@ require('./xyz.js');
 // const {substract} = require('./calculate/substract.js');
 
 // const {x, calculateSum, calculateMultiply, substract} = require('./calculate/index.js');
-const {x, calculateSum, calculateMultiply, substract} = require('./calculate'); 
+const {x, calculateSum, calculateMultiply, substract, multiplyAny} = require('./calculate'); 
 // if we don't specify the file name, it will look for index.js file in the folder and import the exported items from there
 const data = require('./data.json'); // importing json file as a module
 const util = require("node:util"); // importing nodejs built-in module called util
@@ -32,6 +32,7 @@ console.log(calculateSum(a, c));
 console.log(calculateMultiply(a, a));
 console.log(calculateMultiply(a, c));
 console.log(substract(a, c));
+console.log(multiplyAny(a, b, c));
 console.log(JSON.stringify(data));
 // console.log(global);
 // console.log(this); // {}, this is not equal to  global object in this scenario whereas in case of browser this is equal to window object
