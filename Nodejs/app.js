@@ -34,7 +34,7 @@ console.log(calculateMultiply(a, a));
 console.log(calculateMultiply(a, c));
 console.log(substract(a, c));
 console.log(multiplyAny(a, b, c));
-console.log(multiplyAny(a, b, c, d));
+console.log(multiplyAny(a, b, d));
 console.log(JSON.stringify(data));
 // console.log(global);
 // console.log(this); // {}, this is not equal to  global object in this scenario whereas in case of browser this is equal to window object
