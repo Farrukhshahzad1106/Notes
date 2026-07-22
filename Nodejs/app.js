@@ -21,7 +21,7 @@ var name = "Namaste Nodejs, learning Backend development using Nodejs";
 
 var a = 21;
 var b = 17;
-const c = 18;
+const c = 108;
 var d = 0;
 
 console.log(name);
