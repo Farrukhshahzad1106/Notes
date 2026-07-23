@@ -24,7 +24,7 @@ function sumAny(...args) {
   return result;
 }
 
-var x = 50;
+var x = 40;
 
 module.exports = {
     x,
