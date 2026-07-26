@@ -116,3 +116,16 @@ function showOrderSummary(paymentInfo) {
 
 // return value inside .catch() makes the chain continue successfully.='
 // It is effectively treated like a resolved promise with that returned value.
+
+
+
+// PROMISE API's (Promise.all, Promise.race, Promise.allSettled, Promise.any) are used to handle multiple promises concurrently. 
+// They allow you to wait for multiple asynchronous operations to complete and handle their results collectively.
+
+// 1- Promise.all(): It takes an iterable (but we mostly pass an array of promises to it) of promises and returns a new promise that resolves when all the input promises have resolved, or rejects if any of the input promises reject. 
+// The resolved value is an array of the resolved values from the input promises, in the same order as they were passed in.
+// Promise.all() is useful when you want to wait for multiple asynchronous operations to complete before proceeding, and you need all of their results. If any promise fails, the entire operation fails.
+
+//Promise.all() executes all the promises and waits for all of it to resolve or any of them to reject. 
+// If any promise rejects, Promise.all() immediately rejects with that reason, and the other promises are ignored. If all promises resolve, it resolves with an array of their results.
+// If all promises resolve we get an array of values in return in the same order as those passed through the iterable. Whwereas if any one of the promise rejects Promise.all() rejects and the value return is the value of the first rejected promise and the remaining promise whether resolved or rejected are ignored.
