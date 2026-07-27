@@ -10,7 +10,7 @@ function createOrder(cart) {
         if (!cart || cart.length === 0) {
             reject(new Error("Cart is empty. Cannot create order."));
         } else {
-            const orderId = Math.floor(Math.random() * 10000);
+            const orderId = Math.floor(Math.random() * 1000);
             resolve(orderId);
         }
 })}
