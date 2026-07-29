@@ -8,7 +8,7 @@ createOrder(cart)
 function createOrder(cart) {
     return new Promise((resolve, reject) => {
         if (!cart || cart.length === 0) {
-            reject(new Error("Cart is empty. Cannot create an order."));
+            reject(new Error("Cart is empty. Cannot create order."));
         } else {
             const orderId = Math.floor(Math.random() * 1000);
             resolve(orderId);
