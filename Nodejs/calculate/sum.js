@@ -17,7 +17,7 @@ function sumAny(...args) {
   let result = 0;
   for (const num of args) {
     if (typeof num !== 'number') {
-      throw new Error("Arguments must be numbers.");
+      throw new Error("All arguments must be numbers.");
     }
     result += num;
   }
