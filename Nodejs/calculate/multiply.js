@@ -3,7 +3,7 @@ function calculateMultiply(a, b) {
 }
 
 function multiplyAny(...args) {
-  if (args.length === 0) {
+  if (!args.length) {
     throw new Error("At least one number is required for multiplication.");
   }
   let result = args[0];
