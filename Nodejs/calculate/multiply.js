@@ -15,7 +15,7 @@ function multiplyAny(...args) {
     if (typeof num !== 'number') {
       throw new Error("All arguments must be numbers.");
     }
-    result *= num;
+    result = result * num;
   }
   return result;
 }
