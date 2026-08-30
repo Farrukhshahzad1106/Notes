@@ -122,20 +122,27 @@ function saveUser(user) {
   });
 }
 
-Promise.resolve({ name: "Asha" })
+// Promise.resolve() immediately fulfills with { name: "Farrukh" }.
+// The first .then() receives that object as user and starts saveUser(user).
+// However, saveUser() creates a Promise that takes 500ms, and this callback does
+// not return it. A .then() callback with no return resolves its new Promise with
+// undefined right away, so the next .then() does not wait for saving to finish.
+Promise.resolve({ name: "Farrukh" })
   .then(user => {
     saveUser(user); // Incorrect: this Promise is not returned.
   })
   .then(() => console.log("Runs before saving is guaranteed to finish."));
 
-Promise.resolve({ name: "Asha" })
+// Here, returning saveUser(user) connects that 500ms Promise to the chain.
+// The next .then() waits for it to fulfill before it is allowed to run.
+Promise.resolve({ name: "Farrukh" })
   .then(user => {
     return saveUser(user); // Correct: the chain now waits.
   })
   .then(() => console.log("Runs after saving finishes."));
 
 // 5. Preserve a value after a side effect.
-Promise.resolve({ name: "Asha" })
+Promise.resolve({ name: "Farrukh" })
   .then(user => {
     console.log("Loaded user:", user.name);
     return user; // Keep the value available to the next link.
@@ -175,3 +182,131 @@ Promise.resolve("data")
   .then(value => console.log("Value after finally:", value)); // data
 
 // Note: throwing inside finally() overrides the earlier result and rejects the chain.
+
+// -----------------------------------------------------------------------------
+// Promise constructor and Promise static methods
+// -----------------------------------------------------------------------------
+
+// Promise constructor
+// Use new Promise() when you need to wrap callback-based or custom async work.
+// Call resolve(value) when the work succeeds and reject(error) when it fails.
+function wait(milliseconds) {
+  return new Promise((resolve, reject) => {
+    if (milliseconds < 0) {
+      reject(new Error("Milliseconds cannot be negative."));
+      return;
+    }
+
+    setTimeout(() => resolve(`Waited ${milliseconds}ms`), milliseconds);
+  });
+}
+
+wait(100)
+  .then(message => console.log("Promise constructor:", message))
+  .catch(error => console.error(error.message));
+
+// Promise.resolve(value) creates an already-fulfilled Promise.
+Promise.resolve("Already available")
+  .then(value => console.log("Promise.resolve:", value));
+
+// Promise.reject(reason) creates an already-rejected Promise.
+Promise.reject(new Error("Example rejection"))
+  .catch(error => console.log("Promise.reject:", error.message));
+
+const firstTask = Promise.resolve("first result");
+const secondTask = Promise.resolve("second result");
+const failedTask = Promise.reject(new Error("Task failed"));
+
+// Promise.all(iterable)
+// Resolves only when EVERY input Promise resolves. Results retain input order.
+// Rejects immediately when any input Promise rejects.
+Promise.all([firstTask, secondTask])
+  .then(results => console.log("Promise.all:", results));
+
+Promise.all([firstTask, failedTask])
+  .then(results => console.log(results))
+  .catch(error => console.log("Promise.all error:", error.message));
+
+// Promise.allSettled(iterable)
+// Waits for EVERY Promise, regardless of whether it fulfilled or rejected.
+// Each result has status: "fulfilled" with value, or "rejected" with reason.
+Promise.allSettled([firstTask, failedTask])
+  .then(results => console.log("Promise.allSettled:", results));
+
+// Promise.race(iterable)
+// Settles as soon as the FIRST input Promise settles (fulfills or rejects).
+const slowTask = new Promise(resolve => setTimeout(() => resolve("slow"), 200));
+const fastTask = new Promise(resolve => setTimeout(() => resolve("fast"), 50));
+
+Promise.race([slowTask, fastTask])
+  .then(result => console.log("Promise.race:", result)); // fast
+
+// Promise.any(iterable)
+// Resolves with the FIRST successful result. Rejections are ignored unless every
+// input Promise rejects; in that case it rejects with an AggregateError.
+Promise.any([failedTask, fastTask])
+  .then(result => console.log("Promise.any:", result)); // fast
+
+Promise.any([
+  Promise.reject(new Error("Service A failed")),
+  Promise.reject(new Error("Service B failed")),
+])
+  .catch(error => console.log("Promise.any errors:", error.errors.length));
+
+// -----------------------------------------------------------------------------
+// Promise method reference
+// -----------------------------------------------------------------------------
+
+// INSTANCE METHODS (called on a Promise instance)
+// promise.then(onFulfilled, onRejected)
+// Adds success and optional error handlers. It always returns a NEW Promise.
+// A returned value flows to the next handler; a returned Promise is awaited.
+
+// promise.catch(onRejected)
+// Shorthand for promise.then(undefined, onRejected). It handles a rejection and
+// returns a new Promise, so returning a fallback value lets the chain continue.
+
+// promise.finally(onFinally)
+// Runs after fulfillment or rejection, usually for cleanup. It receives no
+// result value and normally preserves the earlier value or error. If it throws,
+// the returned Promise rejects with that new error.
+
+// STATIC METHODS (called on Promise itself)
+// Promise.resolve(value)
+// Converts a value, thenable, or Promise into a Promise. A normal value becomes
+// a fulfilled Promise; a Promise/thenable is adopted and its eventual result is
+// followed.
+
+// Promise.reject(reason)
+// Returns a new Promise that is immediately rejected with reason.
+
+// Promise.all(iterable)
+// Waits for every input to fulfill and resolves with their values in input order.
+// It rejects as soon as the first input rejects. Use it when every result is
+// required.
+
+// Promise.allSettled(iterable)
+// Waits for every input to settle. It always fulfills with an array of outcome
+// objects: { status: "fulfilled", value } or { status: "rejected", reason }.
+// Use it when you need a report of every task, including failures.
+
+// Promise.race(iterable)
+// Settles as soon as the first input settles, whether it fulfills or rejects.
+// It is commonly used for timeouts, but it does not cancel the losing work.
+
+// Promise.any(iterable)
+// Fulfills with the first successful input. It ignores individual rejections,
+// then rejects with AggregateError only when every input rejects. Use it for
+// fallback services or alternative sources.
+
+// Promise.withResolvers()
+// Returns { promise, resolve, reject }. It is useful when the code that creates
+// a Promise must expose its resolve/reject functions for an event or callback
+// that happens later. Prefer ordinary Promise-returning APIs when possible.
+// This modern method may require a current JavaScript runtime.
+
+// Promise.try(callback, ...args)
+// Calls callback immediately and wraps its outcome in a Promise: a returned
+// value fulfills, a thrown error rejects, and a returned Promise is adopted.
+// This modern method is useful when a function may be synchronous or async.
+// Check runtime support before using it in older browsers or Node.js versions.
