@@ -316,15 +316,27 @@ Promise.any([
 // -----------------------------------------------------------------------------
 
 // 1. What is a Promise?
+// Detailed answer: A Promise represents a future value, not necessarily a value that already
+// exists. It gives asynchronous code one standard contract: success is delivered
+// as fulfillment and failure as rejection, so callers can attach handlers later.
+
 // A Promise is an object representing the eventual result of an asynchronous
 // operation. It is pending at first, then becomes fulfilled or rejected.
 
 // 2. What is the difference between a Promise's state and its result?
+// Detailed answer: State describes the lifecycle (pending, fulfilled, rejected); result is the
+// final value or reason. A Promise is immutable after settlement so multiple
+// consumers observe the same outcome and no race can change it afterward.
+
 // State is pending, fulfilled, or rejected. A fulfilled Promise's result is its
 // value; a rejected Promise's result is its reason/error. Once settled, its
 // state and result cannot change.
 
 // 3. Why does .then() return a new Promise?
+// Detailed answer: .then() returns a new Promise because each handler may transform a value,
+// start more async work, or fail. The new Promise represents that handler's own
+// eventual outcome, which is what makes a chain sequential and composable.
+
 // This allows chaining. The new Promise settles based on what the callback
 // returns or throws.
 Promise.resolve(2)
@@ -333,42 +345,80 @@ Promise.resolve(2)
 
 // 4. What happens when a .then() callback returns a value, a Promise, nothing,
 // or throws an error?
+// Detailed answer: Returning a plain value fulfills the next Promise with that value. Returning
+// a Promise/thenable makes the next Promise adopt it and wait. No return means
+// return undefined. Throwing is converted into a rejection, preserving one error
+// path instead of requiring manual try/catch inside every callback.
+
 // - return value: next .then() receives that value.
 // - return Promise: chain waits for it.
 // - no return: next .then() receives undefined.
 // - throw error: chain becomes rejected and goes to .catch().
 
 // 5. What is the difference between .then(success, failure) and .catch(failure)?
+// Detailed answer: .then(success, failure) handles a rejection only from the Promise before
+// that particular .then(); it does not catch errors thrown by its own success
+// callback. A later .catch() can handle both earlier rejections and handler
+// errors, which is why ending a chain with .catch() is usually preferable.
+
 // .catch(failure) is like .then(undefined, failure). A catch at the end also
 // handles errors thrown by earlier success handlers, which is why it is usually
 // easier and safer to read.
 
 // 6. Does .catch() stop a Promise chain?
+// Detailed answer: .catch() returns a new Promise. If its handler returns normally, that new
+// Promise fulfills with the returned value, so the chain recovers. If it throws
+// or returns a rejected Promise, the chain stays rejected and a later catch can
+// handle the new error.
+
 // No. If it returns a normal value, the next .then() runs with that value.
 Promise.reject(new Error("Request failed"))
   .catch(() => "fallback data")
   .then(value => console.log("Interview 6:", value)); // fallback data
 
 // 7. What is the difference between Promise.all(), allSettled(), race(), and any()?
+// Detailed answer: Choose all when every result is essential; it fails fast. Choose allSettled
+// when failures are also useful information. Choose race when the first settled
+// outcome matters (such as a timeout). Choose any when only one successful source
+// is required, because individual source failures should not stop the operation.
+
 // all:        needs every task to succeed; first failure rejects it.
 // allSettled: waits for every task and reports every outcome.
 // race:       first task to settle (success OR failure) wins.
 // any:        first task to succeed wins; rejects only if all tasks fail.
 
 // 8. Does Promise.all() cancel other Promises after one rejects?
+// Detailed answer: Promise.all() only observes Promise outcomes; Promises do not have built-in
+// cancellation. Its returned Promise rejects early for fast feedback, but it has
+// no authority to stop an already-started network request, timer, or file task.
+
 // No. It rejects early, but the other asynchronous operations keep running
 // unless their APIs support cancellation (for example, fetch with AbortController).
 
 // 9. What is the difference between Promise.resolve() and new Promise(...)?
+// Detailed answer: Promise.resolve() is a conversion utility: it wraps a value or adopts an
+// existing thenable. new Promise() runs an executor immediately and exposes
+// resolve/reject, so it is for adapting callback/event APIs—not for wrapping code
+// that already returns a Promise, where it can add mistakes without benefit.
+
 // Promise.resolve(value) wraps/adopts an existing value or Promise. Use
 // new Promise((resolve, reject) => ...) only when adapting a callback/event API
 // or creating custom asynchronous work.
 
 // 10. What is a thenable?
+// Detailed answer: A thenable is promise-like rather than necessarily a native Promise. Native
+// Promise APIs adopt it so different libraries can interoperate. This convenience
+// is why thenable code must be trusted: its .then() method is executed.
+
 // Any object with a callable .then() method. Promise.resolve(thenable) adopts
 // it, meaning the resulting native Promise follows its eventual outcome.
 
 // 11. Are Promise callbacks synchronous or asynchronous?
+// Detailed answer: The Promise executor runs immediately so it can begin the underlying work.
+// Handlers run asynchronously as microtasks so registration is predictable: even
+// an already-fulfilled Promise never calls a newly added handler in the middle of
+// the current synchronous call stack.
+
 // The executor passed to new Promise() runs synchronously. Handlers passed to
 // .then(), .catch(), and .finally() run later as microtasks, even when the
 // Promise is already settled.
@@ -378,22 +428,40 @@ console.log("Interview 11: end");
 // Output: start, end, promise handler
 
 // 12. What is the microtask queue, and why is it important?
+// Detailed answer: The microtask queue is drained after the current JavaScript stack finishes
+// and before the runtime takes the next timer/event task. Promise reactions use
+// it, which explains why a .then() normally runs before setTimeout(..., 0).
+
 // Promise handlers use the microtask queue. After current synchronous code
 // finishes, JavaScript runs queued microtasks before moving to timer callbacks
 // such as setTimeout() (the task/macrotask queue).
 
 // 13. What is the output order here?
+// Detailed answer: Synchronous logging happens first because it is on the current stack. The
+// Promise handler is then run from the microtask queue. Finally the timer runs
+// from the later task queue; a zero delay means "not before the current turn", not
+// "run immediately".
+
 setTimeout(() => console.log("Interview 13: timeout"), 0);
 Promise.resolve().then(() => console.log("Interview 13: microtask"));
 console.log("Interview 13: synchronous");
 // Output: synchronous, microtask, timeout
 
 // 14. What is Promise callback "callback hell" and how do Promises help?
+// Detailed answer: Callback hell occurs when each callback starts the next operation inside a
+// deeper block. Returning Promises keeps each step at the same indentation level,
+// and errors can propagate automatically to one rejection handler.
+
 // Callback hell is deeply nested callbacks that are difficult to read and
 // handle errors in. Returning Promises produces a flat, sequential chain with
 // centralized error handling.
 
 // 15. What is the relationship between async/await and Promises?
+// Detailed answer: An async function is syntax that builds a Promise-returning function. await
+// resumes that function when its operand settles: fulfillment supplies a value,
+// while rejection throws at the await expression. It does not block the JavaScript
+// thread or pause unrelated code.
+
 // async functions always return a Promise. await pauses only that async function
 // until its Promise settles; it is syntax built on top of Promise behavior.
 async function getGreeting() {
@@ -404,10 +472,19 @@ async function getGreeting() {
 getGreeting().then(message => console.log("Interview 15:", message));
 
 // 16. How do you handle a timeout or cancel a Promise?
+// Detailed answer: Promise.race() can report a timeout first, but it cannot stop the original
+// operation. Cancellation needs cooperation from the underlying API; fetch, for
+// example, accepts AbortController.signal so abort() can stop the request itself.
+
 // Promise.race() can choose a timeout result, but it does not stop the original
 // work. For fetch, pass an AbortSignal from AbortController to actually cancel.
 
 // 17. What is an unhandled Promise rejection?
+// Detailed answer: An unhandled rejection means no rejection handler was attached in time for
+// a rejected Promise. Runtimes may warn, log, or terminate because it often means
+// a failure was silently lost. Return/await all Promises so error ownership stays
+// visible, and catch errors at a deliberate boundary.
+
 // It is a rejected Promise without a rejection handler. Always return/await
 // Promises and handle errors with try/catch or .catch() at an appropriate level.
 
@@ -416,6 +493,11 @@ getGreeting().then(message => console.log("Interview 15:", message));
 // -----------------------------------------------------------------------------
 
 // 18. What does this print, and why?
+// Detailed answer: The first handler logs "value" and implicitly returns undefined. Since the
+// Promise returned by that .then() fulfills with undefined, the following handler
+// receives undefined. Logging a value is a side effect; it does not forward that
+// value unless the handler explicitly returns it.
+
 Promise.resolve("value")
   .then(value => {
     console.log("Interview 18a:", value);
@@ -425,6 +507,11 @@ Promise.resolve("value")
 // Output: "value", then undefined.
 
 // 19. What is the difference between returning a Promise and nesting it?
+// Detailed answer: Returning an inner Promise makes the outer chain adopt it, so the next step
+// waits and a final catch sees its failure. Nesting without return creates a
+// detached branch: the outer chain completes early and cannot reliably observe
+// the branch's value or error.
+
 // Returning keeps one chain and lets one final catch handle failures.
 // Nesting creates an inner chain that the outer chain does not wait for.
 Promise.resolve("Farrukh")
@@ -434,6 +521,11 @@ Promise.resolve("Farrukh")
   .then(message => console.log("Interview 19:", message));
 
 // 20. Why is this error NOT caught by the outer catch?
+// Detailed answer: The inner Promise is detached because it is created but not returned. The
+// outer callback itself finishes normally, so its Promise fulfills with undefined
+// and the outer catch has nothing to catch. Returning the inner Promise connects
+// its rejection to the outer chain.
+
 // Promise.resolve()
 //   .then(() => {
 //     Promise.reject(new Error("Inner rejection")); // Not returned.
@@ -445,6 +537,11 @@ Promise.resolve("Farrukh")
 // to run without an unhandled-rejection warning.
 
 // 21. Does a Promise resolve only once?
+// Detailed answer: Settlement is first-call-wins. This protects callers from conflicting
+// callbacks that try to report both success and failure. Calling resolve with a
+// pending Promise is special: the outer Promise commits to following it, then
+// settles when that inner Promise eventually settles.
+
 // Yes. Only the first call to resolve() or reject() matters; later attempts are
 // ignored. "Resolve" can adopt another Promise, so it may stay pending until
 // that adopted Promise settles.
@@ -456,6 +553,10 @@ const settleOnce = new Promise((resolve, reject) => {
 settleOnce.then(value => console.log("Interview 21:", value)); // first result
 
 // 22. Is Promise.resolve(promise) always a new Promise?
+// Detailed answer: Promise.resolve(existingPromise) can return exactly the same Promise when
+// it was created by the same Promise constructor. There is no need to add another
+// wrapper; preserving identity also avoids unnecessary scheduling and allocation.
+
 // No. If promise is already a native Promise created by the same constructor,
 // Promise.resolve(promise) returns the very same object.
 const existingPromise = Promise.resolve("same object");
@@ -465,6 +566,11 @@ console.log(
 ); // true
 
 // 23. What is Promise resolution (or assimilation)?
+// Detailed answer: Assimilation means a returned Promise/thenable controls the state of the
+// Promise produced by .then(). It prevents nested results such as
+// Promise<Promise<string>> and is why a chain naturally waits for returned async
+// operations.
+
 // If a handler returns a Promise or thenable, the Promise created by .then()
 // adopts its state instead of fulfilling with the Promise object itself.
 Promise.resolve()
@@ -472,12 +578,20 @@ Promise.resolve()
   .then(value => console.log("Interview 23:", value)); // adopted value
 
 // 24. What happens if a chain returns itself?
+// Detailed answer: A Promise cannot depend on its own result because it could never determine
+// whether to fulfill or reject. JavaScript detects this circular resolution and
+// rejects with TypeError instead of leaving the chain pending forever.
+
 // It creates a circular resolution and rejects with TypeError.
 let circularChain;
 circularChain = Promise.resolve().then(() => circularChain);
 circularChain.catch(error => console.log("Interview 24:", error.name)); // TypeError
 
 // 25. Can one rejection handler receive errors from multiple earlier links?
+// Detailed answer: Rejection travels forward through a chain until a rejection handler handles
+// it. Each .then() without a suitable error handler passes the rejection onward,
+// so one terminal catch can centrally handle failures from many earlier steps.
+
 // Yes. A catch at the end handles rejections from the original Promise and
 // errors thrown or returned as rejected Promises by every earlier chain handler.
 Promise.resolve("input")
@@ -491,14 +605,28 @@ Promise.resolve("input")
 // Promise.reject(error)? Both make the next Promise reject. Throwing is usually
 // clearer for synchronous validation; return Promise.reject() is useful when an
 // API already supplies a rejected Promise.
+// Detailed answer: Both throw error and return Promise.reject(error) create a rejected next
+// Promise. throw is simpler for an error discovered synchronously in the handler;
+// returning a rejected Promise is useful when forwarding an already-Promise-based
+// API result. Their observable chain behavior is otherwise equivalent.
+
 
 // 27. What happens if finally() returns a rejected Promise?
+// Detailed answer: finally() waits for anything it returns. A fulfilled cleanup result is
+// ignored so the original outcome passes through, but a thrown error or rejected
+// cleanup Promise means cleanup failed, so that failure replaces the earlier one.
+
 // It overrides the earlier success or failure, and the resulting chain rejects.
 Promise.resolve("original value")
   .finally(() => Promise.reject(new Error("Cleanup failed")))
   .catch(error => console.log("Interview 27:", error.message));
 
 // 28. Why can await in a loop be slow, and when is it correct?
+// Detailed answer: await inside for...of waits before starting the next iteration, so durations
+// add together. That is correct for dependencies, ordered writes, or rate limits.
+// Independent work should start first and be joined with Promise.all(), allowing
+// the underlying operations to overlap.
+
 // A for...of loop with await performs tasks one after another. That is correct
 // when each task depends on the previous result or rate limiting is required.
 // For independent tasks, start them together and use Promise.all().
@@ -515,22 +643,41 @@ async function concurrentExample() {
 }
 
 // 29. Why is Array.prototype.forEach() a poor match for await?
+// Detailed answer: forEach ignores the value returned from its callback, including Promises.
+// Therefore awaiting the forEach call does not wait for its async callbacks. Use
+// for...of when sequence is needed, or map() to create a Promise array followed
+// by Promise.all() when work can be concurrent.
+
 // forEach does not await its callback or return a Promise representing all work.
 // Use for...of for sequential work, or map() plus Promise.all() for concurrent
 // work instead.
 
 // 30. Does Promise.race() provide a reliable timeout by itself?
+// Detailed answer: race() only decides which result the caller receives first; it does not
+// cancel losers. Without aborting the slow operation, it can keep consuming
+// bandwidth, CPU, or resources and possibly produce side effects after timeout.
+
 // It selects whichever result settles first, but losing operations continue.
 // A real timeout should also cancel work when the underlying API supports it.
 // Example with fetch: create AbortController, pass controller.signal to fetch,
 // and call controller.abort() when the timeout expires.
 
 // 31. What is the difference between concurrency and parallelism for Promises?
+// Detailed answer: Concurrency means operations are in progress during the same time period.
+// Parallelism means work physically executes simultaneously. Promise.all() starts
+// no work by itself; it observes work already started. Actual parallelism depends
+// on the browser, Node.js, network, OS, and whether workers are used.
+
 // Starting several async operations before awaiting them is concurrent. Whether
 // work runs in parallel depends on the underlying operation and JavaScript host
 // (network, browser, Node.js, workers), not on Promise.all() itself.
 
 // 32. How do Promise errors differ from errors in setTimeout callbacks?
+// Detailed answer: Promise machinery catches exceptions only in its executor and registered
+// reaction handlers. A later timer callback is a separate task, outside that
+// Promise's execution context. To propagate its error, call reject(error) inside
+// the timer callback or wrap that callback with try/catch and reject the Promise.
+
 // A thrown error inside a Promise handler becomes a rejection in that chain. A
 // throw inside a later setTimeout callback is outside the Promise unless that
 // callback calls reject(error) or catches and forwards the error.
